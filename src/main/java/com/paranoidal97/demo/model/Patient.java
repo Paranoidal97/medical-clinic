@@ -1,4 +1,4 @@
-package com.paranoidal97.demo;
+package com.paranoidal97.demo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
