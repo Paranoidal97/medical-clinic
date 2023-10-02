@@ -39,8 +39,12 @@ public class PatientController {
     }
 
     @PutMapping("/{email}")
-    public void editPatient(@PathVariable String email @RequestBody Patient patientData){
+    public void editPatient(@PathVariable String email, @RequestBody Patient patient){
         Patient patientToEdit = getPatients(email);
-
+        patientToEdit.setPassword(patient.getPassword());
+        patientToEdit.setFirstName(patient.getFirstName());
+        patientToEdit.setLastName(patient.getLastName());
+        patientToEdit.setPhoneNumber(patient.getPhoneNumber());
+        patientToEdit.setEmail(patient.getEmail());
     }
 }
