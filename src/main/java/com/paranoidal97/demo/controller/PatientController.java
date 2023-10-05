@@ -1,8 +1,12 @@
 package com.paranoidal97.demo.controller;
 
 import com.paranoidal97.demo.model.Patient;
+import com.paranoidal97.demo.service.PatientService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -11,36 +15,43 @@ import java.util.List;
 @RequestMapping("/patients")
 // Jest to adnotacja używana do mapowania żądań HTTP na metody kontrolera. W tym przypadku,
 // wszystkie żądania HTTP, które rozpoczynają się od /patients, zostaną przekierowane do tej kontrolera
+@RequiredArgsConstructor
 public class PatientController {
-    private List<Patient> patients;
+    private final PatientService service;
 
     @GetMapping
     public List<Patient> getAllPatients() {
-        return patients;
+        return service.getAllPatients();
     }
 
     @GetMapping("/{email}")
     public Patient getPatients(@PathVariable String email) {
-        return patients.stream()
-                .filter(patient -> patient.getEmail().equals(email))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Nie ma takiego użytkownika w bazie"));
+        return service.getPatients(email);
     }
 
     @PostMapping
     public void addPatient(@RequestBody Patient patient){
-        patients.add(patient);
+        service.addPatient(patient);
     }
 
     @DeleteMapping("/{email}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePatient(@PathVariable String email){
-        Patient patientToDelete = getPatients(email);
-        patients.remove(patientToDelete);
+        service.deletePatient(email);
     }
 
     @PutMapping("/{email}")
-    public void editPatient(@PathVariable String email @RequestBody Patient patientData){
-        Patient patientToEdit = getPatients(email);
+    public void editPatient(@PathVariable String email, @RequestBody Patient patient){
+        service.editPatient(email,patient);
+    }
 
+    @PatchMapping("/{email}")
+    public void changePassword(@PathVariable String email, @RequestBody String password ){
+        service.changePassword(email, password);
+    }
+
+    @PatchMapping("/{email}")
+    public void changePassword(@PathVariable String email, @RequestBody String oldPassword, @RequestBody String newPassword ){
+        service.changePassword(email, oldPassword, newPassword);
     }
 }
