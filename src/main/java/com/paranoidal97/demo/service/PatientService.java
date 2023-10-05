@@ -64,14 +64,4 @@ public class PatientService {
         }
     }
 
-    public void changePassword(String email, String oldPassword, String newPassword) {
-        Patient patient = getPatient(email);
-        if (newPassword == null || newPassword.isEmpty()) {
-            throw new IllegalArgumentException("Hasło nie może być nullem lub być puste");
-        } else if (oldPassword.equals(patient.getPassword())) {
-            patient.setPassword(newPassword);
-        } else {
-            throw new IllegalArgumentException("Podano złe stare hasło" );
-        }
-    }
 }

@@ -50,8 +50,4 @@ public class PatientController {
         service.changePassword(email, password);
     }
 
-    @PatchMapping("/{email}")
-    public void changePassword(@PathVariable String email, @RequestBody String oldPassword, @RequestBody String newPassword ){
-        service.changePassword(email, oldPassword, newPassword);
-    }
 }
