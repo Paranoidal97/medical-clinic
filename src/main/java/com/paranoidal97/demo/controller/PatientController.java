@@ -41,8 +41,8 @@ public class PatientController {
     }
 
     @PutMapping("/{email}")
-    public void editPatient(@PathVariable String email, @RequestBody Patient patient){
-        service.editPatient(email,patient);
+    public Patient editPatient(@PathVariable String email, @RequestBody Patient patient){
+        return service.editPatient(email,patient);
     }
 
     @PatchMapping("/{email}")
