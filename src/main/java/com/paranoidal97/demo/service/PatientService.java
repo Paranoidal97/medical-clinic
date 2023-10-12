@@ -1,9 +1,9 @@
 package com.paranoidal97.demo.service;
 
-import com.paranoidal97.demo.exception.DataAlreadyExsistException;
+import com.paranoidal97.demo.exception.DataAlreadyExistException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
 import com.paranoidal97.demo.model.Patient;
-import com.paranoidal97.demo.repository.PatientRepository;
+import com.paranoidal97.demo.repository.PatientRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PatientService {
-    private final PatientRepository patientRepository;
+    private final PatientRepositoryImpl patientRepository;
 
     public List<Patient> getAllPatients() {
         return patientRepository.getAllPatients();
@@ -21,13 +21,13 @@ public class PatientService {
 
     public Patient getPatient(String email) {
         return patientRepository.getPatient(email)
-                .orElseThrow(() -> new DataNotFoundException("Nie ma takiego użytkownika"));
+                .orElseThrow(() -> new DataNotFoundException("There is no such user"));
     }
 
     public Patient addPatient(Patient patient) {
         Optional<Patient> patientToFind = patientRepository.getPatient(patient.getEmail());
-        if(patientToFind.isPresent()){
-            throw new DataAlreadyExsistException("Taki uzutkownik już istnieje");
+        if (patientToFind.isPresent()) {
+            throw new DataAlreadyExistException("Such user already exists");
         }
         patientRepository.addPatient(patient);
         return patient;
@@ -36,15 +36,15 @@ public class PatientService {
 
     public void deletePatient(String email) {
         Optional<Patient> patientToFind = patientRepository.getPatient(email);
-        if(patientToFind.isEmpty()){
-            throw new DataNotFoundException("Nie ma takiego użytkownika");
+        if (patientToFind.isEmpty()) {
+            throw new DataNotFoundException("There is no such user");
         }
         patientRepository.deletebyEmail(email);
     }
 
     public Patient editPatient(String email, Patient patient) {
         Patient patientToEdit = patientRepository.getPatient(email)
-                .orElseThrow(() -> new DataNotFoundException("Nie ma takiego użytkownika"));
+                .orElseThrow(() -> new DataNotFoundException("There is no such user"));
         patientToEdit.setPassword(patient.getPassword());
         patientToEdit.setFirstName(patient.getFirstName());
         patientToEdit.setLastName(patient.getLastName());
@@ -55,11 +55,11 @@ public class PatientService {
 
     public void changePassword(String email, String password) {
         Patient patient = patientRepository.getPatient(email)
-                .orElseThrow(() -> new DataNotFoundException("Nie ma takiego użytkownika"));
+                .orElseThrow(() -> new DataNotFoundException("There is no such user"));
         if (password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Hasło nie może być nullem lub być puste");
+            throw new IllegalArgumentException("The password cannot be null or empty");
         } else if (password.equals(patient.getPassword())) {
-            throw new IllegalArgumentException("Hasła są takie same");
+            throw new IllegalArgumentException("The new password cannot be the same as the old one");
         }
         patient.setPassword(password);
 

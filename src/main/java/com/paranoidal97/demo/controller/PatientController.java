@@ -24,28 +24,28 @@ public class PatientController {
     }
 
     @GetMapping("/{email}")
-    public Patient getPatients(@PathVariable String email) {
+    public Patient getPatient(@PathVariable String email) {
         return service.getPatient(email);
     }
 
     @PostMapping
-    public void addPatient(@RequestBody Patient patient){
+    public void addPatient(@RequestBody Patient patient) {
         service.addPatient(patient);
     }
 
     @DeleteMapping("/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePatient(@PathVariable String email){
+    public void deletePatient(@PathVariable String email) {
         service.deletePatient(email);
     }
 
     @PutMapping("/{email}")
-    public Patient editPatient(@PathVariable String email, @RequestBody Patient patient){
-        return service.editPatient(email,patient);
+    public Patient editPatient(@PathVariable String email, @RequestBody Patient patient) {
+        return service.editPatient(email, patient);
     }
 
     @PatchMapping("/{email}")
-    public void changePassword(@PathVariable String email, @RequestBody String password ){
+    public void changePassword(@PathVariable String email, @RequestBody String password) {
         service.changePassword(email, password);
     }
 
