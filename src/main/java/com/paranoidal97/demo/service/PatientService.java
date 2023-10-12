@@ -39,7 +39,7 @@ public class PatientService {
         if (patientToFind.isEmpty()) {
             throw new DataNotFoundException("There is no such user");
         }
-        patientRepository.deletebyEmail(email);
+        patientRepository.deleteByEmail(email);
     }
 
     public Patient editPatient(String email, Patient patient) {
