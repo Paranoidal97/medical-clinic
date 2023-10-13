@@ -50,6 +50,8 @@ public class PatientService {
         patientToEdit.setLastName(patient.getLastName());
         patientToEdit.setPhoneNumber(patient.getPhoneNumber());
         patientToEdit.setEmail(patient.getEmail());
+        patientToEdit.setIdCardNo(patient.getIdCardNo());
+        patientToEdit.setBirthday(patient.getBirthday());
         return patientToEdit;
     }
 
