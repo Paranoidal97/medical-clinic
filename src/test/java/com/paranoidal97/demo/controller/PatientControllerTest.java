@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paranoidal97.demo.data.TestDataFactory;
 import com.paranoidal97.demo.model.Patient;
 import com.paranoidal97.demo.repository.PatientRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,6 @@ import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-// wskazuje, że framework testowy będzie automatycznie konfigurował obiekt MockMvc,
-// który jest używany do wykonywania zapytań HTTP i testowania kontrolera.
 public class PatientControllerTest {
     @Autowired
     MockMvc mockMvc;
@@ -37,22 +36,24 @@ public class PatientControllerTest {
 
     @BeforeEach
     void setup() {
-        Optional<Patient> patient = patientRepository.getPatient("jan.kowalski@example.com");
+        Optional<Patient> patient = patientRepository.findByEmail("jan.kowalski@example.com");
 
         if (patient.isPresent()) {
             patientRepository.deleteByEmail("jan.kowalski@example.com");
         }
 
-        patientRepository.addPatient(TestDataFactory.createSamplePatient());
+        patientRepository.save(TestDataFactory.createSamplePatient());
     }
 
     @Test
+    @Transactional
     void getAllPatientsTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/patients"))
                 .andDo(print());
     }
 
     @Test
+    @Transactional
     void getPatientTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/patients/{email}", "jan.kowalski@example.com"))
                 .andDo(print())
@@ -61,6 +62,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @Transactional
     void createPatientTest() throws Exception {
         Patient samplePatient = TestDataFactory.createSamplePatient();
         samplePatient.setEmail("test@test.pl");
@@ -73,6 +75,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @Transactional
     void deletePatientTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/patients/{email}", "jan.kowalski@example.com"))
                 .andDo(print())
@@ -80,6 +83,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @Transactional
     void editPatientTest() throws Exception {
         Patient patientToEdite = Patient.builder()
                 .email("jan.kowalski@example.com")
@@ -100,6 +104,7 @@ public class PatientControllerTest {
     }
 
     @Test
+    @Transactional
     void changePasswordTest() throws Exception {
         String newPassword = "newPassword123";
 

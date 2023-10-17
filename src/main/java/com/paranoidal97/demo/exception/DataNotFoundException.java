@@ -6,8 +6,7 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 
 public class DataNotFoundException extends MedicalClinicException {
-
     public DataNotFoundException(String message) {
-        super(message,HttpStatus.NOT_FOUND);
+        super(message, HttpStatus.NOT_FOUND);
     }
 }

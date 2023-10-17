@@ -3,7 +3,7 @@ package com.paranoidal97.demo.service;
 import com.paranoidal97.demo.exception.DataAlreadyExistException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
 import com.paranoidal97.demo.model.Patient;
-import com.paranoidal97.demo.repository.PatientRepositoryImpl;
+import com.paranoidal97.demo.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,29 +13,29 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PatientService {
-    private final PatientRepositoryImpl patientRepository;
+    private final PatientRepository patientRepository;
 
     public List<Patient> getAllPatients() {
-        return patientRepository.getAllPatients();
+        return patientRepository.findAll();
     }
 
     public Patient getPatient(String email) {
-        return patientRepository.getPatient(email)
+        return patientRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
     }
 
     public Patient addPatient(Patient patient) {
-        Optional<Patient> patientToFind = patientRepository.getPatient(patient.getEmail());
+        Optional<Patient> patientToFind = patientRepository.findByEmail(patient.getEmail());
         if (patientToFind.isPresent()) {
             throw new DataAlreadyExistException("Such user already exists");
         }
-        patientRepository.addPatient(patient);
+        patientRepository.save(patient);
         return patient;
 
     }
 
     public void deletePatient(String email) {
-        Optional<Patient> patientToFind = patientRepository.getPatient(email);
+        Optional<Patient> patientToFind = patientRepository.findByEmail(email);
         if (patientToFind.isEmpty()) {
             throw new DataNotFoundException("There is no such user");
         }
@@ -43,7 +43,7 @@ public class PatientService {
     }
 
     public Patient editPatient(String email, Patient patient) {
-        Patient patientToEdit = patientRepository.getPatient(email)
+        Patient patientToEdit = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
         patientToEdit.setPassword(patient.getPassword());
         patientToEdit.setFirstName(patient.getFirstName());
@@ -56,7 +56,7 @@ public class PatientService {
     }
 
     public void changePassword(String email, String password) {
-        Patient patient = patientRepository.getPatient(email)
+        Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
         if (password == null || password.isEmpty()) {
             throw new IllegalArgumentException("The password cannot be null or empty");

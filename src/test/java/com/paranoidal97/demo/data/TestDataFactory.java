@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TestDataFactory {
 
-    public static List<Patient> createSamplePatients(){
+    public static List<Patient> createSamplePatients() {
         List<Patient> patients = new ArrayList<>();
 
         Patient patient1 = Patient.builder()
@@ -47,7 +47,7 @@ public class TestDataFactory {
         return Arrays.asList(patient1, patient2, patient3);
     }
 
-    public static Patient createSamplePatient(){
+    public static Patient createSamplePatient() {
 
         Patient patient1 = Patient.builder()
                 .email("jan.kowalski@example.com")

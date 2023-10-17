@@ -4,7 +4,7 @@ import com.paranoidal97.demo.data.TestDataFactory;
 import com.paranoidal97.demo.exception.DataAlreadyExistException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
 import com.paranoidal97.demo.model.Patient;
-import com.paranoidal97.demo.repository.PatientRepositoryImpl;
+import com.paranoidal97.demo.repository.PatientRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +25,7 @@ import java.util.Optional;
 public class PatientServiceTest {
 
     @Mock
-    PatientRepositoryImpl patientRepository;
+    PatientRepository patientRepository;
 
     @InjectMocks
     PatientService patientService;
@@ -32,7 +34,7 @@ public class PatientServiceTest {
     void getAllPatients_PatientsExists_PatientsReturned() {
         //given
         List<Patient> samplePatients = TestDataFactory.createSamplePatients();
-        Mockito.when(patientRepository.getAllPatients()).thenReturn(samplePatients);
+        Mockito.when(patientRepository.findAll()).thenReturn(samplePatients);
         //when
         var result = patientService.getAllPatients();
         //then
@@ -45,7 +47,7 @@ public class PatientServiceTest {
     void getPatient_PatientExist_PatientReturned() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(samplePatient));
         //when
         var result = patientService.getPatient("jan.kowalski@example.com");
@@ -63,7 +65,7 @@ public class PatientServiceTest {
     @Test
     void getPatient_PatientNotExist_DataNotFoundException() {
         //given
-        Mockito.when(patientRepository.getPatient("non.existing@example.com"))
+        Mockito.when(patientRepository.findByEmail("non.existing@example.com"))
                 .thenReturn(Optional.empty());
         //when
         Exception exception = assertThrows(DataNotFoundException.class, () -> {
@@ -78,7 +80,7 @@ public class PatientServiceTest {
     void addPatient_PatientDoesNotExist_PatientReturned() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.addPatient(samplePatient)).thenReturn(samplePatient);
+        Mockito.when(patientRepository.save(samplePatient)).thenReturn(samplePatient);
         //when
         var result = patientService.addPatient(samplePatient);
         //then
@@ -96,10 +98,10 @@ public class PatientServiceTest {
     void addPatient_PatientExist_DataAlreadyExistException() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(samplePatient));
         //when
-        Exception exception = assertThrows(DataAlreadyExistException.class, () ->{
+        Exception exception = assertThrows(DataAlreadyExistException.class, () -> {
             patientService.addPatient(samplePatient);
         });
         //then
@@ -110,7 +112,7 @@ public class PatientServiceTest {
     void deletePatient_PatientExist_PatientDeleted() {
         //given
         Patient patient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(patient));
         //when
         patientService.deletePatient("jan.kowalski@example.com");
@@ -123,14 +125,14 @@ public class PatientServiceTest {
     @Test
     void deletePatient_PatientDoesNotExist_DataNotFoundException() {
         //given
-        Mockito.when(patientRepository.getPatient("non.existing@example.com"))
+        Mockito.when(patientRepository.findByEmail("non.existing@example.com"))
                 .thenReturn(Optional.empty());
         //when
         Exception exception = assertThrows(DataNotFoundException.class, () -> {
             patientService.deletePatient("non.existing@example.com");
         });
         //then
-        assertEquals("There is no such user",exception.getMessage());
+        assertEquals("There is no such user", exception.getMessage());
     }
 
     @Test
@@ -146,24 +148,24 @@ public class PatientServiceTest {
                 .phoneNumber("+48 123 456 799")
                 .birthday(LocalDate.of(1989, 5, 15))
                 .build();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(patient));
         //when
-        var result = patientService.editPatient("jan.kowalski@example.com",patientEdited);
+        var result = patientService.editPatient("jan.kowalski@example.com", patientEdited);
         //then
-        assertEquals("jan.kowalski@example.com",result.getEmail());
-        assertEquals("passwordEdit",result.getPassword());
-        assertEquals("idEdit",result.getIdCardNo());
-        assertEquals("JanEditt",result.getFirstName());
-        assertEquals("KowalskiEdut",result.getLastName());
-        assertEquals("+48 123 456 799",result.getPhoneNumber());
-        assertEquals(LocalDate.of(1989, 5, 15),result.getBirthday());
+        assertEquals("jan.kowalski@example.com", result.getEmail());
+        assertEquals("passwordEdit", result.getPassword());
+        assertEquals("idEdit", result.getIdCardNo());
+        assertEquals("JanEditt", result.getFirstName());
+        assertEquals("KowalskiEdut", result.getLastName());
+        assertEquals("+48 123 456 799", result.getPhoneNumber());
+        assertEquals(LocalDate.of(1989, 5, 15), result.getBirthday());
     }
 
     @Test
     void editPatient_PatientDoesNotExist_DataNotFoundException() {
         //given
-        Mockito.when(patientRepository.getPatient("non.existing@example.com"))
+        Mockito.when(patientRepository.findByEmail("non.existing@example.com"))
                 .thenReturn(Optional.empty());
         //when
         Exception exception = assertThrows(DataNotFoundException.class, () -> {
@@ -177,10 +179,10 @@ public class PatientServiceTest {
     void changePassword_PatientExist_Success() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(samplePatient));
         //when
-        patientService.changePassword("jan.kowalski@example.com","newPassword");
+        patientService.changePassword("jan.kowalski@example.com", "newPassword");
         //then
         assertEquals(samplePatient.getPassword(), "newPassword");
     }
@@ -188,7 +190,7 @@ public class PatientServiceTest {
     @Test
     void changePassword_PatientDoesNotExist_DataNotFoundException() {
         //given
-        Mockito.when(patientRepository.getPatient("non.existing@example.com"))
+        Mockito.when(patientRepository.findByEmail("non.existing@example.com"))
                 .thenReturn(Optional.empty());
         //when and then
         Exception exception = assertThrows(DataNotFoundException.class, () -> {
@@ -202,41 +204,41 @@ public class PatientServiceTest {
     void changePassword_PatientExist_NewPasswordNull() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(samplePatient));
         //when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             patientService.changePassword("jan.kowalski@example.com", null);
         });
         //then
-        assertEquals("The password cannot be null or empty",exception.getMessage());
+        assertEquals("The password cannot be null or empty", exception.getMessage());
     }
 
     @Test
     void changePassword_PatientExist_NewPasswordEmpty() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(samplePatient));
         //when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             patientService.changePassword("jan.kowalski@example.com", "");
         });
         //then
-        assertEquals("The password cannot be null or empty",exception.getMessage());
+        assertEquals("The password cannot be null or empty", exception.getMessage());
     }
 
     @Test
     void changePassword_PatientExist_NewPasswordEqualsOld() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.getPatient("jan.kowalski@example.com"))
+        Mockito.when(patientRepository.findByEmail("jan.kowalski@example.com"))
                 .thenReturn(Optional.ofNullable(samplePatient));
         //when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             patientService.changePassword("jan.kowalski@example.com", samplePatient.getPassword());
         });
         //then
-        assertEquals("The new password cannot be the same as the old one",exception.getMessage());
+        assertEquals("The new password cannot be the same as the old one", exception.getMessage());
     }
 }

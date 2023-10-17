@@ -12,21 +12,16 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @ControllerAdvice
-// To oznacza, że będzie on obsługiwać wyjątki w całej aplikacji.
 public class MedicalClinicExceptionHandler {
-
-
-    //To jest adnotacja, która informuje framework webowy, że metoda, którą oznaczamy tą adnotacją,
-    // jest odpowiedzialna za obsługę wyjątków typu DataNotFoundException.
-    // W momencie rzucenia wyjątku DataNotFoundException, framework wywoła tę metodę w celu obsługi błędu.
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<MessageDto> handleDataNotFoundException(DataNotFoundException ex) {
-        return ResponseEntity.status(ex.getStatus()).body(new MessageDto(ex.getMessage(),ex.getStatus(), LocalDateTime.now()));
+        return ResponseEntity.status(ex.getStatus()).body(new MessageDto(ex.getMessage(), ex.getStatus(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(DataAlreadyExistException.class)
     public ResponseEntity<MessageDto> handleDataAlreadyExsistException(DataNotFoundException ex) {
-        return ResponseEntity.status(ex.getStatus()).body(new MessageDto(ex.getMessage(),ex.getStatus(), LocalDateTime.now()));    }
+        return ResponseEntity.status(ex.getStatus()).body(new MessageDto(ex.getMessage(), ex.getStatus(), LocalDateTime.now()));
+    }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<MessageDto> handleRuntimeException(RuntimeException ex) {
