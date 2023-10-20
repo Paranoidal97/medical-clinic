@@ -29,8 +29,9 @@ public class PatientController {
     }
 
     @PostMapping
-    public void addPatient(@RequestBody Patient patient) {
+    public Patient addPatient(@RequestBody Patient patient) {
         service.addPatient(patient);
+        return patient;
     }
 
     @DeleteMapping("/{email}")
@@ -44,6 +45,7 @@ public class PatientController {
         return service.editPatient(email, patient);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{email}")
     public void changePassword(@PathVariable String email, @RequestBody String password) {
         service.changePassword(email, password);
