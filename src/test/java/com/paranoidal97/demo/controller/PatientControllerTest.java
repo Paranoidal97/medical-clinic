@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class PatientControllerTest {
     @Autowired
     MockMvc mockMvc;
@@ -46,14 +48,16 @@ public class PatientControllerTest {
     }
 
     @Test
-    @Transactional
+    @Rollback
     void getAllPatientsTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/patients"))
-                .andDo(print());
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].email").value("jan.kowalski@example.com"));
     }
 
     @Test
-    @Transactional
+    @Rollback
     void getPatientTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/patients/{email}", "jan.kowalski@example.com"))
                 .andDo(print())
@@ -62,20 +66,23 @@ public class PatientControllerTest {
     }
 
     @Test
-    @Transactional
+    @Rollback
     void createPatientTest() throws Exception {
         Patient samplePatient = TestDataFactory.createSamplePatient();
         samplePatient.setEmail("test@test.pl");
+        samplePatient.setIdCardNo("BCD123");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/patients")
                         .content(objectMapper.writeValueAsString(samplePatient))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
-                .andDo(print());
+                .andDo(print())
+                .andExpect(jsonPath("$.email").value("test@test.pl"));
+
     }
 
     @Test
-    @Transactional
+    @Rollback
     void deletePatientTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/patients/{email}", "jan.kowalski@example.com"))
                 .andDo(print())
@@ -83,7 +90,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    @Transactional
+    @Rollback
     void editPatientTest() throws Exception {
         Patient patientToEdite = Patient.builder()
                 .email("jan.kowalski@example.com")
@@ -104,7 +111,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    @Transactional
+    @Rollback
     void changePasswordTest() throws Exception {
         String newPassword = "newPassword123";
 

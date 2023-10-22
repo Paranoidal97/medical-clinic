@@ -8,14 +8,14 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
-@Table
 @Data
 @AllArgsConstructor
 @Builder
+@Table(name="patient")
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long Id;
     private String email;
     private String password;
     private String idCardNo;
@@ -23,8 +23,5 @@ public class Patient {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
-
-    public Patient() {
-    }
 
 }
