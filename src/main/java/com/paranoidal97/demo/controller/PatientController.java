@@ -1,6 +1,6 @@
 package com.paranoidal97.demo.controller;
 
-import com.paranoidal97.demo.model.Patient;
+import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

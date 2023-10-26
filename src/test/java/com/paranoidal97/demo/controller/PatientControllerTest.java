@@ -2,7 +2,7 @@ package com.paranoidal97.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paranoidal97.demo.data.TestDataFactory;
-import com.paranoidal97.demo.model.Patient;
+import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;

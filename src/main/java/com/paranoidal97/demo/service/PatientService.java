@@ -2,7 +2,7 @@ package com.paranoidal97.demo.service;
 
 import com.paranoidal97.demo.exception.DataAlreadyExistException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
-import com.paranoidal97.demo.model.Patient;
+import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -16,28 +16,28 @@ databaseChangeLog:
                   type: int
               - column:
                   name: email
-                  type: varchar(50)
+                  type: varchar(255)
                   constraints:
                     unique: true
                     uniqueConstraintName: unique_patient_email
               - column:
                   name: password
-                  type: varchar(50)
+                  type: varchar(128)
               - column:
                   name: id_card_no
-                  type: varchar(20)
+                  type: varchar(255)
                   constraints:
                     unique: true
                     uniqueConstraintName: unique_patient_id_card_no
               - column:
                   name: first_name
-                  type: varchar(20)
+                  type: varchar(255)
               - column:
                   name: last_name
-                  type: varchar(20)
+                  type: varchar(255)
               - column:
                   name: phone_number
-                  type: varchar(20)
+                  type: varchar(15)
               - column:
                   name: birthday
                   type: date
