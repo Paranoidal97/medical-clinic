@@ -3,7 +3,7 @@ package com.paranoidal97.demo.data;
 import com.paranoidal97.demo.model.entity.Doctor;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.model.entity.Visit;
-import com.paranoidal97.demo.model.entity.VisitType;
+import com.paranoidal97.demo.model.enums.VisitType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

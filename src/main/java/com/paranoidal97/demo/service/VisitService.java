@@ -5,7 +5,7 @@ import com.paranoidal97.demo.exception.InvalidAppointmentTimeException;
 import com.paranoidal97.demo.exception.PastAppointmentException;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.model.entity.Visit;
-import com.paranoidal97.demo.model.entity.VisitType;
+import com.paranoidal97.demo.model.enums.VisitType;
 import com.paranoidal97.demo.repository.PatientRepository;
 import com.paranoidal97.demo.repository.VisitRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +23,11 @@ public class VisitService {
 
     public List<Visit> getAllVisits() {
         return visitRepository.findAll();
+    }
+
+    public Visit getVisit(Long id) {
+        return visitRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("There is no such visit"));
     }
 
     public Visit addVisit(Visit visit) {
@@ -41,11 +45,6 @@ public class VisitService {
         }
         visitRepository.save(visit);
         return visit;
-    }
-
-    public Visit getVisit(Long id) {
-        return visitRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("There is no such visit"));
     }
 
     public Visit assignPatient(Long patientId, Long visitId) {
@@ -67,7 +66,9 @@ public class VisitService {
                 .orElseThrow(
                         () -> new DataNotFoundException("There is no such Visit")
                 );
-        visitToAssign.setVisitType(visit.getVisitType());
+        if(visitToAssign.getVisitType().isTransitionAllowed(visit.getVisitType(),true)){
+            visitToAssign.setVisitType(visit.getVisitType());
+        }
         //TODO
         // ale załatwia nam to sprawe statusów
         // ale jednak burdel i przydałyby sie walidatory

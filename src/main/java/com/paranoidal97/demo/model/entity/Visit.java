@@ -1,5 +1,6 @@
 package com.paranoidal97.demo.model.entity;
 
+import com.paranoidal97.demo.model.enums.VisitType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

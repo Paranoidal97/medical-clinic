@@ -33,7 +33,12 @@ public class MedicalClinicExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateAppointmentException.class)
-    public ResponseEntity<MessageDto> handleDuplicateAppointmentExceptionn(DuplicateAppointmentException ex){
+    public ResponseEntity<MessageDto> handleDuplicateAppointmentException(DuplicateAppointmentException ex){
+        return ResponseEntity.status(ex.getStatus()).body(new MessageDto(ex.getMessage(), ex.getStatus(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(IllegalApointmentTransition.class)
+    public ResponseEntity<MessageDto> handleIllegalApointmentTransition(IllegalApointmentTransition ex){
         return ResponseEntity.status(ex.getStatus()).body(new MessageDto(ex.getMessage(), ex.getStatus(), LocalDateTime.now()));
     }
 
