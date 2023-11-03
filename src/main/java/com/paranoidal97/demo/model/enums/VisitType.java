@@ -1,5 +1,6 @@
 package com.paranoidal97.demo.model.enums;
 
+import com.paranoidal97.demo.exception.IllegalApointmentTransition;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -17,9 +18,21 @@ public enum VisitType {
     private final boolean isPatientRequired;
 
     public boolean isTransitionAllowed(VisitType appointmentStatus, boolean isPatientNotNull) {
-        return Optional.of(allowedTransitions.contains(appointmentStatus.toString()) && isPatientNotNull == isPatientRequired)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("This visit transition from state is illegal or patient is missing.")
-                ));
+        if(appointmentStatus.isPatientRequired){
+                if(!(allowedTransitions.contains(appointmentStatus.toString()) && isPatientNotNull)){
+                   throw new IllegalApointmentTransition(
+                            "This visit transition from state is illegal or patient is missing."
+                    );
+                }
+                return true;
+        }
+        else {
+            if(!(allowedTransitions.contains(appointmentStatus.toString()))){
+                throw new IllegalApointmentTransition(
+                        "This visit transition from state is illegal or patient is missing."
+                );
+            }
+            return true;
+        }
     }
 }

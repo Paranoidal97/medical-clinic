@@ -5,6 +5,7 @@ import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.model.entity.Visit;
 import com.paranoidal97.demo.model.enums.VisitType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -96,7 +97,8 @@ public class TestDataFactory {
 
         return doctors;
     }
-    public static Doctor createSampleDoctor(){
+
+    public static Doctor createSampleDoctor() {
 
         Doctor doctor1 = Doctor.builder()
                 .name("Kacper")
@@ -115,7 +117,7 @@ public class TestDataFactory {
                 .startTime(LocalDateTime.now())
                 .endTime(LocalDateTime.now().plusHours(1))
                 .visitType(VisitType.CREATED)
-                .price(100)
+                .price(BigDecimal.valueOf(100))
                 .build();
 
         // Tworzenie kilku wizyt
@@ -123,14 +125,14 @@ public class TestDataFactory {
                 .startTime(LocalDateTime.now().plusDays(1))
                 .endTime(LocalDateTime.now().plusDays(1).plusHours(1))
                 .visitType(VisitType.CREATED)
-                .price(120)
+                .price(BigDecimal.valueOf(120))
                 .build();
 
         Visit visit3 = Visit.builder()
                 .startTime(LocalDateTime.now().plusDays(2))
                 .endTime(LocalDateTime.now().plusDays(2).plusHours(1))
                 .visitType(VisitType.CREATED)
-                .price(80)
+                .price(BigDecimal.valueOf(80))
                 .build();
 
         // Dodawanie wizyt do listy
@@ -147,7 +149,7 @@ public class TestDataFactory {
                 .startTime(LocalDateTime.now())
                 .endTime(LocalDateTime.now().plusHours(1))
                 .visitType(VisitType.CREATED)
-                .price(100)
+                .price(BigDecimal.valueOf(100))
                 .build();
 
         return visit;

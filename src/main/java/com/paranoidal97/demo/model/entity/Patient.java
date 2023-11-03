@@ -1,9 +1,7 @@
 package com.paranoidal97.demo.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -11,7 +9,10 @@ import java.util.Set;
 
 @Entity
 @Data
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Table
 public class Patient {
@@ -29,7 +30,9 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private Set<Visit> vistis = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(
+            mappedBy = "patients"
+    )
     private Set<Doctor> doctors = new HashSet<>();
 
 }

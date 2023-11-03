@@ -19,13 +19,13 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
-    public Patient getPatient(String email) {
-        return patientRepository.findByEmail(email)
+    public Patient getPatient(Long id) {
+        return patientRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
     }
 
     public Patient addPatient(Patient patient) {
-        Optional<Patient> patientToFind = patientRepository.findByEmail(patient.getEmail());
+        Optional<Patient> patientToFind = patientRepository.findById(patient.getId());
         if (patientToFind.isPresent()) {
             throw new DataAlreadyExistException("Such user already exists");
         }
@@ -34,16 +34,16 @@ public class PatientService {
 
     }
 
-    public void deletePatient(String email) {
-        Optional<Patient> patientToFind = patientRepository.findByEmail(email);
+    public void deletePatient(Long id) {
+        Optional<Patient> patientToFind = patientRepository.findById(id);
         if (patientToFind.isEmpty()) {
             throw new DataNotFoundException("There is no such user");
         }
-        patientRepository.deleteByEmail(email);
+        patientRepository.deleteById(id);
     }
 
-    public Patient editPatient(String email, Patient patient) {
-        Patient patientToEdit = patientRepository.findByEmail(email)
+    public Patient editPatient(Long id, Patient patient) {
+        Patient patientToEdit = patientRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
         patientToEdit.setPassword(patient.getPassword());
         patientToEdit.setFirstName(patient.getFirstName());
@@ -55,8 +55,8 @@ public class PatientService {
         return patientToEdit;
     }
 
-    public void changePassword(String email, String password) {
-        Patient patient = patientRepository.findByEmail(email)
+    public void changePassword(Long id, String password) {
+        Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
         if (password == null || password.isEmpty()) {
             throw new IllegalArgumentException("The password cannot be null or empty");

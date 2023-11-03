@@ -37,11 +37,13 @@ public class VisitService {
         if (visit.getStartTime().getMinute() % 15 == 0 && visit.getEndTime().getMinute() % 15 == 0) {
             throw new InvalidAppointmentTimeException("Godzina 1.02 chce mi się spać"); //TODO
         }
-        if (visit.getDoctor().getVisits().stream().anyMatch(visit2 ->
-                visit != visit2 &&
-                        visit.getStartTime().isBefore(visit2.getEndTime()) && visit.getEndTime().isAfter(visit2.getStartTime())
-        )) {
-            throw new InvalidAppointmentTimeException("That doctor already have visit in this time");
+        if (visit.getDoctor().getVisits() != null) {
+            if (visit.getDoctor().getVisits().stream().anyMatch(visit2 ->
+                    visit != visit2 &&
+                            visit.getStartTime().isBefore(visit2.getEndTime()) && visit.getEndTime().isAfter(visit2.getStartTime())
+            )) {
+                throw new InvalidAppointmentTimeException("That doctor already have visit in this time");
+            }
         }
         visitRepository.save(visit);
         return visit;
@@ -66,13 +68,21 @@ public class VisitService {
                 .orElseThrow(
                         () -> new DataNotFoundException("There is no such Visit")
                 );
-        if(visitToAssign.getVisitType().isTransitionAllowed(visit.getVisitType(),true)){
+        if (visit.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new PastAppointmentException("You can't create visit in past, if you think you are Emmett Brown please report to your nerest psychiatric hospital");
+        }
+        if (visit.getStartTime().getMinute() % 15 == 0 && visit.getEndTime().getMinute() % 15 == 0) {
+            throw new InvalidAppointmentTimeException("Godzina 1.02 chce mi się spać"); //TODO
+        }
+        if (visit.getDoctor().getVisits().stream().anyMatch(visit2 ->
+                visit != visit2 &&
+                        visit.getStartTime().isBefore(visit2.getEndTime()) && visit.getEndTime().isAfter(visit2.getStartTime())
+        )) {
+            throw new InvalidAppointmentTimeException("That doctor already have visit in this time");
+        }
+        if (visitToAssign.getVisitType().isTransitionAllowed(visit.getVisitType(), true)) {
             visitToAssign.setVisitType(visit.getVisitType());
         }
-        //TODO
-        // ale załatwia nam to sprawe statusów
-        // ale jednak burdel i przydałyby sie walidatory
-        //  ide spać (Y) 2.29
         return visitToAssign;
     }
 

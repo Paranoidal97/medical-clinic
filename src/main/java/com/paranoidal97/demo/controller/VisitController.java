@@ -33,4 +33,9 @@ public class VisitController {
         return visitService.assignPatient(patientId,visitId);
     }
 
+    @PatchMapping("/{visitId}")
+    public Visit editVisit(@PathVariable Long visitId, @RequestBody Visit visit){
+        return visitService.editVisit(visitId, visit);
+    }
+
 }

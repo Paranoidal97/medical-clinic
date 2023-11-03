@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,7 +27,12 @@ import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
+@Sql(scripts = {"file:src/test/resources/patient/insert_data.sql"},
+        config = @SqlConfig(encoding = "utf-8", transactionMode = SqlConfig.TransactionMode.ISOLATED),
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = {"file:src/test/resources/patient/clear_data.sql"},
+        config = @SqlConfig(encoding = "utf-8", transactionMode = SqlConfig.TransactionMode.ISOLATED),
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class PatientControllerTest {
     @Autowired
     MockMvc mockMvc;
@@ -36,37 +43,23 @@ public class PatientControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setup() {
-        Optional<Patient> patient = patientRepository.findByEmail("jan.kowalski@example.com");
-
-        if (patient.isPresent()) {
-            patientRepository.deleteByEmail("jan.kowalski@example.com");
-        }
-
-        patientRepository.save(TestDataFactory.createSamplePatient());
-    }
-
     @Test
-    @Rollback
     void getAllPatientsTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/patients"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].email").value("jan.kowalski@example.com"));
+                .andExpect(jsonPath("$[0].email").value("patient1@example.com"));
     }
 
     @Test
-    @Rollback
     void getPatientTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/patients/{email}", "jan.kowalski@example.com"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/patients/{id}", 1L))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("jan.kowalski@example.com"));
+                .andExpect(jsonPath("$.email").value("patient1@example.com"));
     }
 
     @Test
-    @Rollback
     void createPatientTest() throws Exception {
         Patient samplePatient = TestDataFactory.createSamplePatient();
         samplePatient.setEmail("test@test.pl");
@@ -78,19 +71,16 @@ public class PatientControllerTest {
                 )
                 .andDo(print())
                 .andExpect(jsonPath("$.email").value("test@test.pl"));
-
     }
 
     @Test
-    @Rollback
     void deletePatientTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/patients/{email}", "jan.kowalski@example.com"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/patients/{id}", 1L))
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    @Rollback
     void editPatientTest() throws Exception {
         Patient patientToEdite = Patient.builder()
                 .email("jan.kowalski@example.com")
@@ -102,7 +92,7 @@ public class PatientControllerTest {
                 .birthday(LocalDate.of(1980, 5, 15))
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/patients/{email}", "jan.kowalski@example.com")
+        mockMvc.perform(MockMvcRequestBuilders.put("/patients/{id}", 1L)
                         .content(objectMapper.writeValueAsString(patientToEdite))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -111,11 +101,10 @@ public class PatientControllerTest {
     }
 
     @Test
-    @Rollback
     void changePasswordTest() throws Exception {
         String newPassword = "newPassword123";
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/patients/{email}", "jan.kowalski@example.com")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/patients/{id}", 1L)
                         .content(newPassword)
                 )
                 .andExpect(status().isNoContent());

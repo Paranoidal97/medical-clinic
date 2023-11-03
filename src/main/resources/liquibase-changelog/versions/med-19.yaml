@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 2
       author: paranoidal97
       changes:
         - createTable:
@@ -13,17 +13,17 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: visit_id
                   name: id
-                  type: int
+                  type: Long
               - column:
                   name: patient_id
-                  type: int
+                  type: Long
                   constraints:
                     foreignKey: true
                     foreignKeyName: fk_visit_patient_id
                     uniqueConstraintName: uq_patient_id
               - column:
                   name: doctor_id
-                  type: int
+                  type: Long
                   constraints:
                     foreignKey: true
                     foreignKeyName: fk_visit_doctor_id
@@ -36,7 +36,7 @@ databaseChangeLog:
                   type: datetime
               - column:
                   name: price
-                  type: int
+                  type: numeric
               - column:
                   name: visit_type
                   type: varchar(9)
@@ -50,7 +50,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_visit_doctor_id
                   name: id
-                  type: int
+                  type: Long
               - column:
                   name: email
                   type: varchar(255)

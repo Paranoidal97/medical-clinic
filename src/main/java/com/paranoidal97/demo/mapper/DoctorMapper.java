@@ -9,7 +9,6 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface DoctorMapper {
 
-    @Mapping(source = "facility", target = "facilityId", qualifiedByName = "mapToFacilityId")
     DoctorDto toDto (Doctor doctor);
 
     Doctor toEntity (DoctorDto doctorDto);

@@ -2,16 +2,16 @@ package com.paranoidal97.demo.model.entity;
 
 import com.paranoidal97.demo.model.enums.VisitType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -33,8 +33,11 @@ public class Visit {
     private LocalDateTime startTime;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endTime;
+    @Enumerated(
+            EnumType.STRING
+    )
     private VisitType visitType;
-    private int price;
+    private BigDecimal price;
 
 
 }
