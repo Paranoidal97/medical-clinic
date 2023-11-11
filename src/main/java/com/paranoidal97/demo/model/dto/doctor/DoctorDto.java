@@ -1,4 +1,4 @@
-package com.paranoidal97.demo.model.dto;
+package com.paranoidal97.demo.model.dto.doctor;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

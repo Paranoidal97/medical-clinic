@@ -1,5 +1,7 @@
 package com.paranoidal97.demo.controller;
 
+import com.paranoidal97.demo.model.dto.doctor.DoctorDto;
+import com.paranoidal97.demo.model.dto.doctor.DoctorDtoMain;
 import com.paranoidal97.demo.model.entity.Doctor;
 import com.paranoidal97.demo.service.DoctorService;
 import lombok.RequiredArgsConstructor;
@@ -13,19 +15,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DoctorController {
     private final DoctorService service;
-
     @GetMapping
-    public List<Doctor> getAllDoctors() {
+    public List<DoctorDtoMain> getAllDoctors() {
         return service.getAllDoctors();
     }
 
     @GetMapping("/{id}")
-    public Doctor getDoctor(@PathVariable Long id) {
+    public DoctorDtoMain getDoctor(@PathVariable Long id) {
         return service.getDoctor(id);
     }
 
     @PostMapping
-    public Doctor addDoctor(@RequestBody Doctor doctor){
+    public DoctorDtoMain addDoctor(@RequestBody DoctorDtoMain doctor){
         service.addDoctor(doctor);
         return doctor;
     }
@@ -37,7 +38,7 @@ public class DoctorController {
     }
 
     @PutMapping("/{id}")
-    public Doctor editDoctor(@PathVariable Long id, @RequestBody Doctor doctor){
-        return service.editDoctor(id, doctor);
+    public DoctorDtoMain editDoctor(@PathVariable Long id, @RequestBody DoctorDtoMain doctor){
+        return service.editDoctor(id , doctor);
     }
 }

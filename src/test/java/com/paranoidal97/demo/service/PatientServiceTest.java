@@ -43,7 +43,8 @@ public class PatientServiceTest {
     void getAllPatients_PatientsExists_PatientsReturned() {
         //given
         List<Patient> samplePatients = TestDataFactory.createSamplePatients();
-        Mockito.when(patientRepository.findAll()).thenReturn(samplePatients);
+        Mockito.when(patientRepository.findAll()).thenReturn(samplePatients);\
+
         //when
         var result = patientService.getAllPatients();
         //then

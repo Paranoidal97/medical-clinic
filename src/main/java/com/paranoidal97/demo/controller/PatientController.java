@@ -1,5 +1,6 @@
 package com.paranoidal97.demo.controller;
 
+import com.paranoidal97.demo.model.dto.patient.PatientDtoMain;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -19,17 +20,17 @@ public class PatientController {
     private final PatientService service;
 
     @GetMapping
-    public List<Patient> getAllPatients() {
+    public List<PatientDtoMain> getAllPatients() {
         return service.getAllPatients();
     }
 
     @GetMapping("/{id}")
-    public Patient getPatient(@PathVariable Long id) {
-        return service.getPatient(Long.valueOf(id));
+    public PatientDtoMain getPatient(@PathVariable Long id) {
+        return service.getPatient(id);
     }
 
     @PostMapping
-    public Patient addPatient(@RequestBody Patient patient) {
+    public PatientDtoMain addPatient(@RequestBody PatientDtoMain patient) {
         service.addPatient(patient);
         return patient;
     }
@@ -37,18 +38,18 @@ public class PatientController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePatient(@PathVariable Long id) {
-        service.deletePatient(Long.valueOf(id));
+        service.deletePatient(id);
     }
 
     @PutMapping("/{id}")
-    public Patient editPatient(@PathVariable Long id, @RequestBody Patient patient) {
-        return service.editPatient(Long.valueOf(id), patient);
+    public PatientDtoMain editPatient(@PathVariable Long id, @RequestBody PatientDtoMain patient) {
+        return service.editPatient(id, patient);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{id}")
     public void changePassword(@PathVariable Long id, @RequestBody String password) {
-        service.changePassword(Long.valueOf(id), password);
+        service.changePassword(id, password);
     }
 
 }

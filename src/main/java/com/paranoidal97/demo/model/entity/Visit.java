@@ -38,6 +38,4 @@ public class Visit {
     )
     private VisitType visitType;
     private BigDecimal price;
-
-
 }

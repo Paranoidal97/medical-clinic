@@ -171,20 +171,6 @@ public class VisitServiceTest {
                 Arguments.of(VisitType.CREATED, VisitType.OUTDATED, false),
                 Arguments.of(VisitType.SCHEDULED, VisitType.CANCELLED, true),
                 Arguments.of(VisitType.SCHEDULED, VisitType.COMPLETED, true)
-
-
         );
     }
-//    @Test
-//    void getAllPatients_PatientsExists_PatientsReturned() {
-//        //given
-//        List<Patient> samplePatients = TestDataFactory.createSamplePatients();
-//        Mockito.when(patientRepository.findAll()).thenReturn(samplePatients);
-//        //when
-//        var result = patientService.getAllPatients();
-//        //then
-//        Assertions.assertThat(result)
-//                .usingFieldByFieldElementComparator()
-//                .containsExactlyInAnyOrderElementsOf(samplePatients);
-//    }
 }

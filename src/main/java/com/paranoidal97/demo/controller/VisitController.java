@@ -1,5 +1,7 @@
 package com.paranoidal97.demo.controller;
 
+import com.paranoidal97.demo.model.dto.visit.VisitDto;
+import com.paranoidal97.demo.model.dto.visit.VisitDtoMain;
 import com.paranoidal97.demo.model.entity.Visit;
 import com.paranoidal97.demo.service.VisitService;
 import lombok.RequiredArgsConstructor;
@@ -14,27 +16,27 @@ public class VisitController {
     private final VisitService visitService;
 
     @GetMapping
-    public List<Visit> getAllVisits(){
+    public List<VisitDtoMain> getAllVisits(){
         return visitService.getAllVisits();
     }
 
     @GetMapping("/{id}")
-    public Visit getVisit(@PathVariable Long id){
+    public VisitDtoMain getVisit(@PathVariable Long id){
         return visitService.getVisit(id);
     }
 
     @PostMapping
-    public Visit addVisit(@RequestBody Visit visit){
+    public VisitDtoMain addVisit(@RequestBody VisitDtoMain visit){
         return visitService.addVisit(visit);
     }
 
     @PatchMapping("/{visitId}/assignPatient")
-    public Visit assignPatient(@RequestBody Long patientId, @PathVariable Long visitId){
+    public VisitDtoMain assignPatient(@RequestBody Long patientId, @PathVariable Long visitId){
         return visitService.assignPatient(patientId,visitId);
     }
 
     @PatchMapping("/{visitId}")
-    public Visit editVisit(@PathVariable Long visitId, @RequestBody Visit visit){
+    public VisitDtoMain editVisit(@PathVariable Long visitId, @RequestBody VisitDtoMain visit){
         return visitService.editVisit(visitId, visit);
     }
 

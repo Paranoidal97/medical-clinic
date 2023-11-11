@@ -18,16 +18,15 @@ public enum VisitType {
     private final boolean isPatientRequired;
 
     public boolean isTransitionAllowed(VisitType appointmentStatus, boolean isPatientNotNull) {
-        if(appointmentStatus.isPatientRequired){
-                if(!(allowedTransitions.contains(appointmentStatus.toString()) && isPatientNotNull)){
-                   throw new IllegalApointmentTransition(
-                            "This visit transition from state is illegal or patient is missing."
-                    );
-                }
-                return true;
-        }
-        else {
-            if(!(allowedTransitions.contains(appointmentStatus.toString()))){
+        if (appointmentStatus.isPatientRequired) {
+            if (!(allowedTransitions.contains(appointmentStatus.toString()) && isPatientNotNull)) {
+                throw new IllegalApointmentTransition(
+                        "This visit transition from state is illegal or patient is missing."
+                );
+            }
+            return true;
+        } else {
+            if (!(allowedTransitions.contains(appointmentStatus.toString()))) {
                 throw new IllegalApointmentTransition(
                         "This visit transition from state is illegal or patient is missing."
                 );

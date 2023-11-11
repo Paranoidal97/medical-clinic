@@ -1,5 +1,6 @@
 package com.paranoidal97.demo.mapper;
-import com.paranoidal97.demo.model.dto.PatientDto;
+import com.paranoidal97.demo.model.dto.patient.PatientDto;
+import com.paranoidal97.demo.model.dto.patient.PatientDtoMain;
 import com.paranoidal97.demo.model.entity.Patient;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -8,6 +9,9 @@ import org.mapstruct.ReportingPolicy;
 public interface PatientMapper {
 
     PatientDto toDto(Patient patient);
+    PatientDtoMain toDtoMain(Patient patient);
 
     Patient toEntity(PatientDto patientDTO);
+    Patient toEntityFromMain(PatientDtoMain patientDTO);
+
 }
