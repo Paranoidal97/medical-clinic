@@ -3,21 +3,20 @@ package com.paranoidal97.demo.service;
 import com.paranoidal97.demo.data.TestDataFactory;
 import com.paranoidal97.demo.exception.DataAlreadyExistException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
+import com.paranoidal97.demo.mapper.DoctorMapper;
 import com.paranoidal97.demo.model.entity.Doctor;
-import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.repository.DoctorRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,11 +24,16 @@ import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class DoctorServiceTest {
-    @Mock
+    DoctorMapper doctorMapper;
     DoctorRepository doctorRepository;
-
-    @InjectMocks
     DoctorService doctorService;
+
+    @BeforeEach
+    void setup() {
+        this.doctorMapper = Mappers.getMapper(DoctorMapper.class);
+        this.doctorRepository = Mockito.mock(DoctorRepository.class);
+        this.doctorService = new DoctorService(doctorRepository, doctorMapper);
+    }
 
     @Test
     void getAllDoctors_doctorsExists_DoctorsReturned() {
@@ -39,7 +43,10 @@ public class DoctorServiceTest {
         //when
         var result = doctorService.getAllDoctors();
         //then
-        Assertions.assertThat(result)
+        List<Doctor> resultDoctors = result.stream()
+                .map(doctorMapper::toEntity)
+                .collect(Collectors.toList());
+        Assertions.assertThat(resultDoctors)
                 .usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrderElementsOf(sampleDoctors);
 
@@ -77,7 +84,7 @@ public class DoctorServiceTest {
         Doctor sampleDoctor = TestDataFactory.createSampleDoctor();
         Mockito.when(doctorRepository.save(sampleDoctor)).thenReturn(sampleDoctor);
         //when
-        var result = doctorService.addDoctor(sampleDoctor);
+        var result = doctorService.addDoctor(doctorMapper.toDto(sampleDoctor));
         //then
         assertEquals(sampleDoctor.getName(), result.getName());
         assertEquals(sampleDoctor.getSurname(), result.getSurname());
@@ -92,7 +99,7 @@ public class DoctorServiceTest {
                 .thenReturn(Optional.ofNullable(sampleDoctor));
         //when
         Exception exception = assertThrows(DataAlreadyExistException.class, () -> {
-            doctorService.addDoctor(sampleDoctor);
+            doctorService.addDoctor(doctorMapper.toDto(sampleDoctor));
         });
         //then
         assertEquals("Such doctor already exists", exception.getMessage());

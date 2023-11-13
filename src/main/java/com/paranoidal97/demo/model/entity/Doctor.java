@@ -26,8 +26,8 @@ public class Doctor {
     @ManyToMany
     @JoinTable(
             name = "doctor_patient",
-            joinColumns = @JoinColumn(name="doctor_id"),
-            inverseJoinColumns = @JoinColumn(name="patient_id")
+            joinColumns = @JoinColumn(name = "doctor_id"),
+            inverseJoinColumns = @JoinColumn(name = "patient_id")
     )
     private Set<Patient> patients = new HashSet<>();
 

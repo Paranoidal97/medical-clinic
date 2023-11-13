@@ -1,9 +1,9 @@
 package com.paranoidal97.demo.service;
 
 import com.paranoidal97.demo.data.TestDataFactory;
-import com.paranoidal97.demo.exception.DataNotFoundException;
 import com.paranoidal97.demo.exception.IllegalApointmentTransition;
 import com.paranoidal97.demo.exception.PastAppointmentException;
+import com.paranoidal97.demo.mapper.VisitMapper;
 import com.paranoidal97.demo.model.entity.Doctor;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.model.entity.Visit;
@@ -11,22 +11,20 @@ import com.paranoidal97.demo.model.enums.VisitType;
 import com.paranoidal97.demo.repository.PatientRepository;
 import com.paranoidal97.demo.repository.VisitRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,12 +32,20 @@ import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class VisitServiceTest {
-    @Mock
+
+    VisitMapper visitMapper;
     VisitRepository visitRepository;
-    @Mock
     PatientRepository patientRepository;
-    @InjectMocks
     VisitService visitService;
+
+    @BeforeEach
+    void setup() {
+        this.visitMapper = Mappers.getMapper(VisitMapper.class);
+        this.visitRepository = Mockito.mock(VisitRepository.class);
+        this.patientRepository = Mockito.mock(PatientRepository.class);
+        this.visitService = new VisitService(visitRepository, patientRepository, visitMapper);
+    }
+
 
     @Test
     void getAllVisits_visitsExists_VisitsReturned() {
@@ -49,7 +55,10 @@ public class VisitServiceTest {
         //when
         var result = visitService.getAllVisits();
         //then
-        Assertions.assertThat(result)
+        List<Visit> resultVisits = result.stream()
+                .map(visitMapper::toEntity)
+                .collect(Collectors.toList());
+        Assertions.assertThat(resultVisits)
                 .usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrderElementsOf(sampleVisits);
     }
@@ -74,7 +83,7 @@ public class VisitServiceTest {
         sampleVisit.setStartTime(LocalDateTime.now());
         sampleVisit.setDoctor(sampleDoctor);
         //when
-        var result = visitService.addVisit(sampleVisit);
+        var result = visitService.addVisit(visitMapper.toDto(sampleVisit));
         //then
         assertEquals(sampleVisit.getVisitType(), result.getVisitType());
     }
@@ -84,9 +93,8 @@ public class VisitServiceTest {
         //given
         Visit sampleVisit = TestDataFactory.createSampleVisit();
         Doctor sampleDoctor = TestDataFactory.createSampleDoctor();
-        sampleVisit.setStartTime(LocalDateTime.now());
         //when
-        var result = visitService.addVisit(sampleVisit);
+        var result = visitService.addVisit(visitMapper.toDto(sampleVisit));
         //then
         assertEquals(sampleVisit.getVisitType(), result.getVisitType());
     }
@@ -95,9 +103,10 @@ public class VisitServiceTest {
     void addVisit_visitNotExists_PastAppointmentException() {
         //given
         Visit sampleVisit = TestDataFactory.createSampleVisit();
+        sampleVisit.setStartTime(LocalDateTime.now().minusDays(2));
         //when
         Exception exception = assertThrows(PastAppointmentException.class, () -> {
-            visitService.addVisit(sampleVisit);
+            visitService.addVisit(visitMapper.toDto(sampleVisit));
         });
         //then
         assertEquals("You can't create visit in past, if you think you are Emmett Brown please report to your nerest psychiatric hospital", exception.getMessage());

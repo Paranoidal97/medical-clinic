@@ -1,7 +1,6 @@
 package com.paranoidal97.demo.controller;
 
-import com.paranoidal97.demo.model.dto.patient.PatientDtoMain;
-import com.paranoidal97.demo.model.entity.Patient;
+import com.paranoidal97.demo.model.dto.patient.PatientDto;
 import com.paranoidal97.demo.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,17 +19,17 @@ public class PatientController {
     private final PatientService service;
 
     @GetMapping
-    public List<PatientDtoMain> getAllPatients() {
+    public List<PatientDto> getAllPatients() {
         return service.getAllPatients();
     }
 
     @GetMapping("/{id}")
-    public PatientDtoMain getPatient(@PathVariable Long id) {
+    public PatientDto getPatient(@PathVariable Long id) {
         return service.getPatient(id);
     }
 
     @PostMapping
-    public PatientDtoMain addPatient(@RequestBody PatientDtoMain patient) {
+    public PatientDto addPatient(@RequestBody PatientDto patient) {
         service.addPatient(patient);
         return patient;
     }
@@ -42,7 +41,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public PatientDtoMain editPatient(@PathVariable Long id, @RequestBody PatientDtoMain patient) {
+    public PatientDto editPatient(@PathVariable Long id, @RequestBody PatientDto patient) {
         return service.editPatient(id, patient);
     }
 

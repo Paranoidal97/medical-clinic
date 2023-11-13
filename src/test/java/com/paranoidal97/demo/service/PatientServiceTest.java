@@ -3,52 +3,55 @@ package com.paranoidal97.demo.service;
 import com.paranoidal97.demo.data.TestDataFactory;
 import com.paranoidal97.demo.exception.DataAlreadyExistException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
+import com.paranoidal97.demo.mapper.PatientMapper;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.repository.PatientRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 
 // Ta adnotacja wskazuje, że testy będą korzystały z rozszerzenia Mockito
 // do tworzenia i zarządzania atrapami (mockami) obiektów.
 @ExtendWith(MockitoExtension.class)
-@Sql(scripts = {"file:src/test/java/com/paranoidal97/demo/data/patient/insert_data.sql"},
-        config = @SqlConfig(encoding = "utf-8", transactionMode = SqlConfig.TransactionMode.ISOLATED),
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = {"file:src/test/java/com/paranoidal97/demo/data/patient/clear_data.sql"},
-        config = @SqlConfig(encoding = "utf-8", transactionMode = SqlConfig.TransactionMode.ISOLATED),
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class PatientServiceTest {
-
-    @Mock
+    PatientMapper patientMapper;
     PatientRepository patientRepository;
 
-    @InjectMocks
     PatientService patientService;
+
+    @BeforeEach
+    void setup() {
+        this.patientRepository = Mockito.mock(PatientRepository.class);
+        this.patientMapper = Mappers.getMapper(PatientMapper.class);
+        this.patientService = new PatientService(patientRepository, patientMapper);
+    }
 
     @Test
     void getAllPatients_PatientsExists_PatientsReturned() {
         //given
         List<Patient> samplePatients = TestDataFactory.createSamplePatients();
-        Mockito.when(patientRepository.findAll()).thenReturn(samplePatients);\
+        Mockito.when(patientRepository.findAll()).thenReturn(samplePatients);
 
         //when
         var result = patientService.getAllPatients();
         //then
-        Assertions.assertThat(result)
+        List<Patient> resultPatients = result.stream()
+                .map(patientMapper::toEntity)
+                .collect(Collectors.toList());
+        Assertions.assertThat(resultPatients)
                 .usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrderElementsOf(samplePatients);
     }
@@ -92,7 +95,7 @@ public class PatientServiceTest {
         Patient samplePatient = TestDataFactory.createSamplePatient();
         Mockito.when(patientRepository.save(samplePatient)).thenReturn(samplePatient);
         //when
-        var result = patientService.addPatient(samplePatient);
+        var result = patientService.addPatient(patientMapper.toDto(samplePatient));
         //then
         assertEquals(samplePatient.getEmail(), result.getEmail());
         assertEquals(samplePatient.getPassword(), result.getPassword());
@@ -108,11 +111,11 @@ public class PatientServiceTest {
     void addPatient_PatientExist_DataAlreadyExistException() {
         //given
         Patient samplePatient = TestDataFactory.createSamplePatient();
-        Mockito.when(patientRepository.findById(any()))
+        Mockito.when(patientRepository.findByEmail(any()))
                 .thenReturn(Optional.ofNullable(samplePatient));
         //when
         Exception exception = assertThrows(DataAlreadyExistException.class, () -> {
-            patientService.addPatient(samplePatient);
+            patientService.addPatient(patientMapper.toDto(samplePatient));
         });
         //then
         assertEquals("Such user already exists", exception.getMessage());
@@ -160,7 +163,7 @@ public class PatientServiceTest {
         Mockito.when(patientRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(patient));
         //when
-        var result = patientService.editPatient(1L, patientEdited);
+        var result = patientService.editPatient(1L, patientMapper.toDto(patientEdited));
         //then
         assertEquals("jan.kowalski@example.com", result.getEmail());
         assertEquals("passwordEdit", result.getPassword());

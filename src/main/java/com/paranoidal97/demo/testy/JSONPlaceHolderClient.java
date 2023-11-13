@@ -18,9 +18,9 @@ public interface JSONPlaceHolderClient {
     ProductDTO getProduct(@PathVariable Long id);
 
     @PutMapping("/products/{id}")
-    ProductDTO  editProduct(@PathVariable Long id, @RequestBody ProductDTO product);
+    ProductDTO editProduct(@PathVariable Long id, @RequestBody ProductDTO product);
 
-    @DeleteMapping ("/products/{id}")
+    @DeleteMapping("/products/{id}")
     void deleteProduct(@PathVariable Long id);
 
     @GetMapping("/orders")
@@ -33,7 +33,7 @@ public interface JSONPlaceHolderClient {
     OrderDTO getOrders(@PathVariable Long id);
 
     @PutMapping("/orders/{id}")
-    OrderDTO  editOrder(@PathVariable Long id, @RequestBody OrderDTO order);
+    OrderDTO editOrder(@PathVariable Long id, @RequestBody OrderDTO order);
 
     @DeleteMapping("/orders/{id}")
     void deleteOrder(@PathVariable Long id);

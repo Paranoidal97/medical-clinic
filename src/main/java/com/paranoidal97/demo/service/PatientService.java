@@ -3,7 +3,7 @@ package com.paranoidal97.demo.service;
 import com.paranoidal97.demo.exception.DataAlreadyExistException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
 import com.paranoidal97.demo.mapper.PatientMapper;
-import com.paranoidal97.demo.model.dto.patient.PatientDtoMain;
+import com.paranoidal97.demo.model.dto.patient.PatientDto;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +20,24 @@ import java.util.stream.Collectors;
 public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
-    public List<PatientDtoMain> getAllPatients() {
+
+    public List<PatientDto> getAllPatients() {
         log.trace("A TRACE Message");
         log.debug("A DEBUG Message");
         log.info("An INFO Message");
         log.warn("A WARN Message");
         log.error("An ERROR Message");
-        return patientRepository.findAll().stream().map(patientMapper::toDtoMain).collect(Collectors.toList());
+        return patientRepository.findAll().stream().map(patientMapper::toDto).collect(Collectors.toList());
     }
 
-    public PatientDtoMain getPatient(Long id) {
+    public PatientDto getPatient(Long id) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
-        return patientMapper.toDtoMain(patient);
+        return patientMapper.toDto(patient);
     }
 
-    public PatientDtoMain addPatient(PatientDtoMain patient) {
-        Patient entityFromMain = patientMapper.toEntityFromMain(patient);
+    public PatientDto addPatient(PatientDto patient) {
+        Patient entityFromMain = patientMapper.toEntity(patient);
         Optional<Patient> patientToFind = patientRepository.findByEmail(entityFromMain.getEmail());
         if (patientToFind.isPresent()) {
             throw new DataAlreadyExistException("Such user already exists");
@@ -52,8 +53,8 @@ public class PatientService {
         patientRepository.deleteById(id);
     }
 
-    public PatientDtoMain editPatient(Long id, PatientDtoMain dto) {
-        Patient patient = patientMapper.toEntityFromMain(dto);
+    public PatientDto editPatient(Long id, PatientDto dto) {
+        Patient patient = patientMapper.toEntity(dto);
         Patient patientToEdit = patientRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("There is no such user"));
         patientToEdit.setPassword(patient.getPassword());
@@ -63,7 +64,7 @@ public class PatientService {
         patientToEdit.setEmail(patient.getEmail());
         patientToEdit.setIdCardNo(patient.getIdCardNo());
         patientToEdit.setBirthday(patient.getBirthday());
-        return patientMapper.toDtoMain(patientToEdit);
+        return patientMapper.toDto(patientToEdit);
     }
 
     public void changePassword(Long id, String password) {

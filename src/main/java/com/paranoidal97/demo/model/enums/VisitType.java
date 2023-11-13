@@ -3,7 +3,6 @@ package com.paranoidal97.demo.model.enums;
 import com.paranoidal97.demo.exception.IllegalApointmentTransition;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor

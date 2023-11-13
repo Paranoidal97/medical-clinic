@@ -111,6 +111,7 @@ public class TestDataFactory {
 
     public static List<Visit> createSampleVisits() {
         List<Visit> visits = new ArrayList<>();
+        LocalDateTime localDateTime2 = LocalDateTime.parse("2024-05-30T18:00:00");
 
         // Tworzenie pojedynczej wizyty
         Visit visit1 = Visit.builder()
@@ -144,10 +145,11 @@ public class TestDataFactory {
     }
 
     public static Visit createSampleVisit() {
+        LocalDateTime localDateTime = LocalDateTime.parse("2024-05-30T18:00:00");
         // Tworzenie pojedynczej wizyty
         Visit visit = Visit.builder()
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
+                .startTime(localDateTime)
+                .endTime(localDateTime.plusMinutes(15))
                 .visitType(VisitType.CREATED)
                 .price(BigDecimal.valueOf(100))
                 .build();

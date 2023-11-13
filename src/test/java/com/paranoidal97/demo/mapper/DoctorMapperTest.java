@@ -16,27 +16,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DoctorMapperTest {
     DoctorMapper doctorMapper = Mappers.getMapper(DoctorMapper.class);
 
-//    @ParameterizedTest
-//    @MethodSource("doctorsData")
-//    void DoctorMapperTest(Doctor doctor) {
-//        var result = doctorMapper(doctor);
-//
-//        assertAll(
-//                () -> assertEquals(doctor.getId(), result.getId()),
-//                () -> assertEquals(doctor.getName(), result.getName()),
-//                () -> assertEquals(doctor.getSurname(), result.getSurname()),
-//                () -> assertEquals(doctor.getEmail(), result.getEmail())
-//        );
-//    }
-//
-//    public static Stream<Arguments> doctorsData() {
-//        Doctor sampleDoctor1 = TestDataFactory.createSampleDoctor();
-//        Doctor sampleDoctor2 = TestDataFactory.createSampleDoctor();
-//
-//
-//        return Stream.of(
-//                Arguments.of(sampleDoctor1),
-//                Arguments.of(sampleDoctor2)
-//        );
-//    }
+    @ParameterizedTest
+    @MethodSource("doctorsData")
+    void DoctorMapperTest(Doctor doctor) {
+        var result = doctorMapper.toDto(doctor);
+
+        assertAll(
+                () -> assertEquals(doctor.getId(), result.getId()),
+                () -> assertEquals(doctor.getName(), result.getName()),
+                () -> assertEquals(doctor.getSurname(), result.getSurname()),
+                () -> assertEquals(doctor.getEmail(), result.getEmail())
+        );
+    }
+
+    public static Stream<Arguments> doctorsData() {
+        Doctor sampleDoctor1 = TestDataFactory.createSampleDoctor();
+        Doctor sampleDoctor2 = TestDataFactory.createSampleDoctor();
+
+
+        return Stream.of(
+                Arguments.of(sampleDoctor1),
+                Arguments.of(sampleDoctor2)
+        );
+    }
 }

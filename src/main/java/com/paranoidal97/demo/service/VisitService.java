@@ -5,7 +5,7 @@ import com.paranoidal97.demo.exception.InvalidAppointmentTimeException;
 import com.paranoidal97.demo.exception.PastAppointmentException;
 import com.paranoidal97.demo.mapper.VisitMapper;
 import com.paranoidal97.demo.model.dto.visit.VisitDto;
-import com.paranoidal97.demo.model.dto.visit.VisitDtoMain;
+import com.paranoidal97.demo.model.entity.Doctor;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.model.entity.Visit;
 import com.paranoidal97.demo.model.enums.VisitType;
@@ -28,24 +28,32 @@ public class VisitService {
     private final PatientRepository patientRepository;
     private final VisitMapper visitMapper;
 
-    public List<VisitDtoMain> getAllVisits() {
-        return visitRepository.findAll().stream().map(visitMapper::toDtoMain).collect(Collectors.toList());
+    public List<VisitDto> getAllVisits() {
+        return visitRepository.findAll().stream().map(visitMapper::toDto).collect(Collectors.toList());
     }
 
-    public VisitDtoMain getVisit(Long id) {
+    public VisitDto getVisit(Long id) {
         Visit visit = visitRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("There is no such visit"));
-        return visitMapper.toDtoMain(visit);
+        return visitMapper.toDto(visit);
     }
 
-    public VisitDtoMain addVisit(VisitDtoMain visitDto) {
-        Visit visit = visitMapper.toEntityFromMain(visitDto);
+    public VisitDto addVisit(VisitDto visitDto) {
+        Visit visit = visitMapper.toEntity(visitDto);
         if (visit.getStartTime().isBefore(LocalDateTime.now())) {
             throw new PastAppointmentException("You can't create visit in past, if you think you are Emmett Brown please report to your nerest psychiatric hospital");
         }
-        if (visit.getStartTime().getMinute() % 15 == 0 && visit.getEndTime().getMinute() % 15 == 0) {
+        if (visit.getStartTime().getMinute() % 15 != 0 && visit.getEndTime().getMinute() % 15 != 0) {
             throw new InvalidAppointmentTimeException("Godzina 1.02 chce mi się spać"); //TODO
         }
+        if(visit.getDoctor() != null){
+            visitsOverlapping(visit);
+        }
+        visitRepository.save(visit);
+        return visitMapper.toDto(visit);
+    }
+
+    public void visitsOverlapping(Visit visit){
         if (visit.getDoctor().getVisits() != null) {
             if (visit.getDoctor().getVisits().stream().anyMatch(visit2 ->
                     visit != visit2 &&
@@ -54,11 +62,9 @@ public class VisitService {
                 throw new InvalidAppointmentTimeException("That doctor already have visit in this time");
             }
         }
-        visitRepository.save(visit);
-        return visitMapper.toDtoMain(visit);
     }
 
-    public VisitDtoMain assignPatient(Long patientId, Long visitId) {
+    public VisitDto assignPatient(Long patientId, Long visitId) {
         Visit visitToAssign = visitRepository.findById(visitId)
                 .orElseThrow(
                         () -> new DataNotFoundException("There is no such Visit")
@@ -69,11 +75,11 @@ public class VisitService {
                 );
         visitToAssign.setVisitType(VisitType.SCHEDULED);
         visitToAssign.setPatient(patientToAssign);
-        return visitMapper.toDtoMain(visitToAssign);
+        return visitMapper.toDto(visitToAssign);
     }
 
-    public VisitDtoMain editVisit(Long visitId, VisitDtoMain visitDto) {
-        Visit visit = visitMapper.toEntityFromMain(visitDto);
+    public VisitDto editVisit(Long visitId, VisitDto visitDto) {
+        Visit visit = visitMapper.toEntity(visitDto);
         Visit visitToAssign = visitRepository.findById(visitId)
                 .orElseThrow(
                         () -> new DataNotFoundException("There is no such Visit")
@@ -87,7 +93,7 @@ public class VisitService {
         if (visitToAssign.getVisitType().isTransitionAllowed(visit.getVisitType(), true)) {
             visitToAssign.setVisitType(visit.getVisitType());
         }
-        return visitMapper.toDtoMain(visitToAssign);
+        return visitMapper.toDto(visitToAssign);
     }
 
     @Scheduled(cron = "0 0 0 * * ?")

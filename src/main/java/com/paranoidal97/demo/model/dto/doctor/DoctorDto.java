@@ -1,13 +1,23 @@
 package com.paranoidal97.demo.model.dto.doctor;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import com.paranoidal97.demo.model.entity.Patient;
+import com.paranoidal97.demo.model.entity.Visit;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@RequiredArgsConstructor
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Builder
+@AllArgsConstructor
 public class DoctorDto {
-    private final Long id;
-    private final String email;
-    private final String name;
-    private final String surname;
+    private Long id;
+    private String password;
+    private String name;
+    private String surname;
+    private String email;
+    private Set<Patient> patients = new HashSet<>();
+    private Set<Visit> visits = new HashSet<>();
 }

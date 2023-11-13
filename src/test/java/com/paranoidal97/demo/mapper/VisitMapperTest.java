@@ -1,9 +1,7 @@
 package com.paranoidal97.demo.mapper;
 
 import com.paranoidal97.demo.data.TestDataFactory;
-import com.paranoidal97.demo.model.entity.Doctor;
 import com.paranoidal97.demo.model.entity.Visit;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
