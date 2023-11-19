@@ -13,10 +13,10 @@ databaseChangeLog:
                     foreignKey: true
                     foreignKeyName: fk_doctor_patient_id
                   name: doctor_id
-                  type: Long
+                  type: BigInt
               - column:
                   name: patient_id
-                  type: Long
+                  type: BigInt
                   constraints:
                     nullable: false
                     foreignKey: true

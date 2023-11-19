@@ -13,26 +13,26 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: visit_id
                   name: id
-                  type: Long
+                  type: BigInt
               - column:
                   name: patient_id
-                  type: Long
+                  type: BigInt
                   constraints:
                     foreignKey: true
                     foreignKeyName: fk_visit_patient_id
                     uniqueConstraintName: uq_patient_id
               - column:
                   name: doctor_id
-                  type: Long
+                  type: BigInt
                   constraints:
                     foreignKey: true
                     foreignKeyName: fk_visit_doctor_id
                     uniqueConstraintName: uq_doctor_id
               - column:
-                  name: start_Time
+                  name: start_time
                   type: datetime
               - column:
-                  name: end_Time
+                  name: end_time
                   type: datetime
               - column:
                   name: price
@@ -50,7 +50,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_visit_doctor_id
                   name: id
-                  type: Long
+                  type: BigInt
               - column:
                   name: email
                   type: varchar(255)

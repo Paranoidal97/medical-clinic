@@ -80,7 +80,7 @@ public class VisitServiceTest {
         //given
         Visit sampleVisit = TestDataFactory.createSampleVisit();
         Doctor sampleDoctor = TestDataFactory.createSampleDoctor();
-        sampleVisit.setStartTime(LocalDateTime.now());
+        sampleVisit.setStartTime(LocalDateTime.now().plusHours(1));
         sampleVisit.setDoctor(sampleDoctor);
         //when
         var result = visitService.addVisit(visitMapper.toDto(sampleVisit));

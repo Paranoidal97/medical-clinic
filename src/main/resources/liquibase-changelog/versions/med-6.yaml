@@ -13,7 +13,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_patient_id
                   name: id
-                  type: Long
+                  type: BigInt
               - column:
                   name: email
                   type: varchar(255)
