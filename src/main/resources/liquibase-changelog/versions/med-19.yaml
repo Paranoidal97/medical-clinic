@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: paranoidal97
+      changes:
+        - createTable:
+            tableName: VISIT
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: visit_id
+                  name: id
+                  type: BigInt
+              - column:
+                  name: patient_id
+                  type: BigInt
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_visit_patient_id
+                    uniqueConstraintName: uq_patient_id
+              - column:
+                  name: doctor_id
+                  type: BigInt
+                  constraints:
+                    foreignKey: true
+                    foreignKeyName: fk_visit_doctor_id
+                    uniqueConstraintName: uq_doctor_id
+              - column:
+                  name: start_time
+                  type: datetime
+              - column:
+                  name: end_time
+                  type: datetime
+              - column:
+                  name: price
+                  type: numeric
+              - column:
+                  name: visit_type
+                  type: varchar(9)
+        - createTable:
+            tableName: DOCTOR
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_visit_doctor_id
+                  name: id
+                  type: BigInt
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    uniqueConstraintName: unique_doctor_email
+              - column:
+                  name: password
+                  type: varchar(128)
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: surname
+                  type: varchar(255)

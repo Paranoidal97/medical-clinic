@@ -1,10 +1,9 @@
-package com.paranoidal97.demo.model;
+package com.paranoidal97.demo.model.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor

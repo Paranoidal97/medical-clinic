@@ -1,6 +1,6 @@
 package com.paranoidal97.demo.controller;
 
-import com.paranoidal97.demo.model.Patient;
+import com.paranoidal97.demo.model.dto.patient.PatientDto;
 import com.paranoidal97.demo.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,36 +19,36 @@ public class PatientController {
     private final PatientService service;
 
     @GetMapping
-    public List<Patient> getAllPatients() {
+    public List<PatientDto> getAllPatients() {
         return service.getAllPatients();
     }
 
-    @GetMapping("/{email}")
-    public Patient getPatient(@PathVariable String email) {
-        return service.getPatient(email);
+    @GetMapping("/{id}")
+    public PatientDto getPatient(@PathVariable Long id) {
+        return service.getPatient(id);
     }
 
     @PostMapping
-    public Patient addPatient(@RequestBody Patient patient) {
+    public PatientDto addPatient(@RequestBody PatientDto patient) {
         service.addPatient(patient);
         return patient;
     }
 
-    @DeleteMapping("/{email}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePatient(@PathVariable String email) {
-        service.deletePatient(email);
+    public void deletePatient(@PathVariable Long id) {
+        service.deletePatient(id);
     }
 
-    @PutMapping("/{email}")
-    public Patient editPatient(@PathVariable String email, @RequestBody Patient patient) {
-        return service.editPatient(email, patient);
+    @PutMapping("/{id}")
+    public PatientDto editPatient(@PathVariable Long id, @RequestBody PatientDto patient) {
+        return service.editPatient(id, patient);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{email}")
-    public void changePassword(@PathVariable String email, @RequestBody String password) {
-        service.changePassword(email, password);
+    @PatchMapping("/{id}")
+    public void changePassword(@PathVariable Long id, @RequestBody String password) {
+        service.changePassword(id, password);
     }
 
 }

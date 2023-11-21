@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: paranoidal97
+      changes:
+        - createTable:
+            tableName: doctor_patient
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    foreignKey: true
+                    foreignKeyName: fk_doctor_patient_id
+                  name: doctor_id
+                  type: BigInt
+              - column:
+                  name: patient_id
+                  type: BigInt
+                  constraints:
+                    nullable: false
+                    foreignKey: true
+                    foreignKeyName: fk_patient_doctor_id
+        - addPrimaryKey:
+            tableName: doctor_patient
+            columnNames: doctor_id, patient_id
+            constraintName: pk_doctor_patient
