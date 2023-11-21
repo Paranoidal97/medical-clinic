@@ -29,7 +29,10 @@ public class VisitService {
     private final VisitMapper visitMapper;
 
     public List<VisitDto> getAllVisits() {
-        return visitRepository.findAll().stream().map(visitMapper::toDto).collect(Collectors.toList());
+        return visitRepository.findAll()
+                .stream()
+                .map(visitMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public VisitDto getVisit(Long id) {
@@ -44,7 +47,7 @@ public class VisitService {
             throw new PastAppointmentException("You can't create visit in past, if you think you are Emmett Brown please report to your nerest psychiatric hospital");
         }
         if (visit.getStartTime().getMinute() % 15 != 0 && visit.getEndTime().getMinute() % 15 != 0) {
-            throw new InvalidAppointmentTimeException("Godzina 1.02 chce mi się spać"); //TODO
+            throw new InvalidAppointmentTimeException("Godzina 1.02 chce mi się spać");
         }
         if(visit.getDoctor() != null){
             visitsOverlapping(visit);
@@ -55,7 +58,10 @@ public class VisitService {
 
     public void visitsOverlapping(Visit visit){
         if (visit.getDoctor().getVisits() != null) {
-            if (visit.getDoctor().getVisits().stream().anyMatch(visit2 ->
+            if (visit.getDoctor()
+                    .getVisits()
+                    .stream()
+                    .anyMatch(visit2 ->
                     visit != visit2 &&
                             visit.getStartTime().isBefore(visit2.getEndTime()) && visit.getEndTime().isAfter(visit2.getStartTime())
             )) {
@@ -88,7 +94,7 @@ public class VisitService {
             throw new PastAppointmentException("You can't create visit in past, if you think you are Emmett Brown please report to your nerest psychiatric hospital");
         }
         if (visit.getStartTime().getMinute() % 15 == 0 && visit.getEndTime().getMinute() % 15 == 0) {
-            throw new InvalidAppointmentTimeException("Godzina 1.02 chce mi się spać"); //TODO
+            throw new InvalidAppointmentTimeException("Godzina 1.02 chce mi się spać");
         }
         if (visitToAssign.getVisitType().isTransitionAllowed(visit.getVisitType(), true)) {
             visitToAssign.setVisitType(visit.getVisitType());

@@ -22,12 +22,10 @@ public class PatientService {
     private final PatientMapper patientMapper;
 
     public List<PatientDto> getAllPatients() {
-        log.trace("A TRACE Message");
-        log.debug("A DEBUG Message");
-        log.info("An INFO Message");
-        log.warn("A WARN Message");
-        log.error("An ERROR Message");
-        return patientRepository.findAll().stream().map(patientMapper::toDto).collect(Collectors.toList());
+        return patientRepository.findAll()
+                .stream()
+                .map(patientMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public PatientDto getPatient(Long id) {

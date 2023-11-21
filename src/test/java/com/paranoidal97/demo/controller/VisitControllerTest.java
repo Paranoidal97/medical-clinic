@@ -44,8 +44,6 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$[0].price").value(100))
                 .andExpect(jsonPath("$[0].visitType").value(VisitType.CREATED.toString()));
     }
-
-    //TODO zamien rollback i ditiesContext na skrypty ssql
     @Test
     void getVisitTest() throws Exception {
         ;
@@ -55,6 +53,4 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$.price").value(100))
                 .andExpect(jsonPath("$.visitType").value(VisitType.CREATED.toString()));
     }
-
-
 }

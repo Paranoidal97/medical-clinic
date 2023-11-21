@@ -130,8 +130,5 @@ public class DoctorServiceTest {
         //then
         assertEquals("There is no such doctor", exception.getMessage());
     }
-//
-//    //TODO dodaj edit Doctor
-//
 
 }
