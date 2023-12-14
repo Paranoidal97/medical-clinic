@@ -42,7 +42,7 @@ public class DoctorControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].email").value("john.doe@example.com"));
-        System.out.println("BBBBBBBBBBB");
+        System.out.println("AAAAAAAAAAAAAA");
     }
 
     @Test
