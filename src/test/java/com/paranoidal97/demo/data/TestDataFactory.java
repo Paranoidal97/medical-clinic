@@ -4,6 +4,8 @@ import com.paranoidal97.demo.model.entity.Doctor;
 import com.paranoidal97.demo.model.entity.Patient;
 import com.paranoidal97.demo.model.entity.Visit;
 import com.paranoidal97.demo.model.enums.VisitType;
+import com.paranoidal97.demo.remote.OrderDTO;
+import com.paranoidal97.demo.remote.ProductDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -156,4 +158,26 @@ public class TestDataFactory {
 
         return visit;
     }
+
+    public static OrderDTO createSampleOrder(){
+        LocalDateTime localDateTime = LocalDateTime.parse("2024-05-30T18:00:00");
+        List<ProductDTO> produkty = new ArrayList<>();
+        OrderDTO order = OrderDTO.builder()
+                .customerName("customerName")
+                .orderDate(localDateTime)
+                .products(produkty)
+                .build();
+        return order;
+    }
+
+    public static ProductDTO createSampleProductDTO(){
+        ProductDTO product = ProductDTO.builder()
+                .name("Produkt name")
+                .description("desriptionaaaaa")
+                .price(BigDecimal.valueOf(0.1d))
+                .build();
+
+        return product;
+    }
+
 }

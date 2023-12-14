@@ -1,4 +1,4 @@
-package com.paranoidal97.demo.testy;
+package com.paranoidal97.demo.remote;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -7,7 +7,6 @@ import java.util.List;
 
 @FeignClient(value = "sklepInternetowy", url = "localhost:8888")
 public interface JSONPlaceHolderClient {
-
     @GetMapping("/products")
     List<ProductDTO> getProducts();
 
@@ -30,7 +29,7 @@ public interface JSONPlaceHolderClient {
     OrderDTO addOrder(@RequestBody OrderDTO order);
 
     @GetMapping("/orders/{id}")
-    OrderDTO getOrders(@PathVariable Long id);
+    OrderDTO getOrder  (@PathVariable Long id);
 
     @PutMapping("/orders/{id}")
     OrderDTO editOrder(@PathVariable Long id, @RequestBody OrderDTO order);

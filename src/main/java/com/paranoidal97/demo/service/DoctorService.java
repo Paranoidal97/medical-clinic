@@ -22,7 +22,7 @@ public class DoctorService {
     private final DoctorMapper doctorMapper;
 
     public List<DoctorDto> getAllDoctors() {
-        log.info("Get all doctors");
+        log.i("Get all doctors");
         return doctorRepository.findAll().stream()
                 .map(doctorMapper::toDto)
                 .collect(Collectors.toList());
