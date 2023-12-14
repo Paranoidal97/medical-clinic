@@ -1,4 +1,4 @@
-package com.paranoidal97.demo.testy;
+package com.paranoidal97.demo.remote;
 
 import com.paranoidal97.demo.exception.BadRequestException;
 import com.paranoidal97.demo.exception.DataNotFoundException;
@@ -6,7 +6,6 @@ import feign.FeignException;
 import feign.Response;
 import feign.RetryableException;
 import feign.codec.ErrorDecoder;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
 
